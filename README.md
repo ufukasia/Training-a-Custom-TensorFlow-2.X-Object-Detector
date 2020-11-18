@@ -1,25 +1,24 @@
 # TensorFlow-2.X ile kendi nesne tanıma programını yaz 
-### TensorFlow-GPU ile kendi nesne tanıma programını eğitebilirsin bunu öğren ... 
+### TensorFlow-GPU ile kendi nesne tanıma programını nasıl eğitebilirsin bunu öğren ... 
 
 
 ## içerik tablosu
 1. [TensorFlow GPU kurulumu](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#installing-tensorflow-gpu)
-2. [Preparing our Workspace and Anaconda Virtual Environment Directory Structure](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#preparing-our-workspace-and-anaconda-virtual-environment-directory-structure)
-3. [Gathering and Labeling our Dataset](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#gathering-and-labeling-our-dataset)
-4. [Generating Training Data](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#generating-training-data)
-5. [Configuring the Training Pipeline](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#configuring-the-training-pipeline)
-6. [Training the Model](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#training-the-model)
-7. [Exporting the Inference Graph](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#exporting-the-inference-graph)
-8. [Testing out the Finished Model](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#testing-out-the-finished-model)
+2. [Anaconda kurulumu ve ayarları](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#preparing-our-workspace-and-anaconda-virtual-environment-directory-structure)
+3. [Dataset hazırlama ve etiketleme](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#gathering-and-labeling-our-dataset)
+4. [Eğitim için gerekli ayarlamalar](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#generating-training-data)
+5. [Eğitim için klasör yapısı ve ayarları](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#configuring-the-training-pipeline)
+6. [Modelin eğitimi](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#training-the-model)
+7. [Inference Graph exportu](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#exporting-the-inference-graph)
+8. [Modelimizin testi](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#testing-out-the-finished-model)
 
-In this repository, I have gathered and labelled my own dataset for my Pill Classification Demo that identifies two types of pills. The training data for this dataset has also been generated, and it's ready for training. If you want to try it out or get some practice with the Object Detection API, you can try training the Pill Classification Model.
+Bu repoda kendi kedi ve kopek modelimi tanıyan bir model eğittim ve bu eğitimde etiketleme işlemlerini otomatik nasıl yaptığı size anlatmak istiyorum. 
 
-<p align="center">
-  <img src="doc/pills.png">
-</p>
 
 ## System Requirements
-When it comes to training a model, your system can heavily affect the process. The times and other figures I mention later on will be influenced by your own system specifications. My system has an Intel i5-9600KF, and more importantly an NVIDIA GeForce GTX 1660 Super with 6GBDDR6 Graphics Card Memory and 8GB of System Memory. To train with TensorFlow GPU, you need a CUDA-Enabled Graphics Card(NVIDIA GTX 650+). For more info on GPU requirements check the CUDA Docs [here](https://developer.nvidia.com/cuda-gpus).
+Bir tensorflow modeli eğitmek zorunda kaldığınızda sisteminiz bu eğitimi desteklemek zorundadır ve verimliliğini belirleyecektir. eğitilen model amd2700x işlemci  Nvidia 2060s ekran kartı ve 16Gb ram ile gerçekleşecektir. Windows üzerinde Tensorflow-GPU kütüphanesinin çalışması için Nvidia ekran kartı sahibi olmanız gerekmektedir. Eğer değilseniz Colab üzerinden googledrive'a dosyalarınızı yükleyerekte sanal bir Tesla-V100 sahibi gibi eğitim yapabilirsiniz. Dersimiz ilgi görürse ayrıca bununla ilgili bir ders yapılacak.
+sizde bu konu hakkında detalı bilgi için bu linke bakabilirsiniz.[tıkla](https://developer.nvidia.com/cuda-gpus).
+
 <p align="left">
   <img src="doc/cuda.png">
 </p>
