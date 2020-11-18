@@ -1,12 +1,9 @@
-# Training-a-Custom-TensorFlow-2.X-Object-Detector
-### Learn how to Train a TensorFlow Custom Object Detector with TensorFlow-GPU
+# TensorFlow-2.X ile kendi nesne tanıma programını yaz 
+### TensorFlow-GPU ile kendi nesne tanıma programını eğitebilirsin bunu öğren ... 
 
-This repo is a guide to use the newly introduced TensorFlow Object Detection API for training a custom object detector with TensorFlow 2.X versions. The steps mentioned mostly follow this [documentation](https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/training.html#), however I have simplified the steps and the process. ***As of 9/13/2020 I have tested with TensorFlow 2.3.0 to train a model on Windows 10.***
 
-I will soon make a YouTube Tutorial which will be posted [here](https://youtu.be/oqd54apcgGE), and an extremely import step [here](https://www.youtube.com/channel/UCT9t2Bug62RDUfSBcPt0Bzg?sub_confirmation=1)!
-
-## Table of Contents
-1. [Installing TensorFlow GPU](https://github.com/armaanpriyadarshan/Training-a-Custom-TensorFlow-2.x-Object-Detector#installing-tensorflow-gpu)
+## içerik tablosu
+1. [TensorFlow GPU kurulumu](https://github.com/armaanpriyadarshan/Training-a-Custom-TensorFlow-2.x-Object-Detector#installing-tensorflow-gpu)
 2. [Preparing our Workspace and Anaconda Virtual Environment Directory Structure](https://github.com/armaanpriyadarshan/Training-a-Custom-TensorFlow-2.x-Object-Detector#preparing-our-workspace-and-anaconda-virtual-environment-directory-structure)
 3. [Gathering and Labeling our Dataset](https://github.com/armaanpriyadarshan/Training-a-Custom-TensorFlow-2.x-Object-Detector#gathering-and-labeling-our-dataset)
 4. [Generating Training Data](https://github.com/armaanpriyadarshan/Training-a-Custom-TensorFlow-2.x-Object-Detector#generating-training-data)
