@@ -3,14 +3,14 @@
 
 
 ## içerik tablosu
-1. [TensorFlow GPU kurulumu](https://github.com/armaanpriyadarshan/Training-a-Custom-TensorFlow-2.x-Object-Detector#installing-tensorflow-gpu)
-2. [Preparing our Workspace and Anaconda Virtual Environment Directory Structure](https://github.com/armaanpriyadarshan/Training-a-Custom-TensorFlow-2.x-Object-Detector#preparing-our-workspace-and-anaconda-virtual-environment-directory-structure)
-3. [Gathering and Labeling our Dataset](https://github.com/armaanpriyadarshan/Training-a-Custom-TensorFlow-2.x-Object-Detector#gathering-and-labeling-our-dataset)
-4. [Generating Training Data](https://github.com/armaanpriyadarshan/Training-a-Custom-TensorFlow-2.x-Object-Detector#generating-training-data)
-5. [Configuring the Training Pipeline](https://github.com/armaanpriyadarshan/Training-a-Custom-TensorFlow-2.x-Object-Detector#configuring-the-training-pipeline)
-6. [Training the Model](https://github.com/armaanpriyadarshan/Training-a-Custom-TensorFlow-2.x-Object-Detector#training-the-model)
-7. [Exporting the Inference Graph](https://github.com/armaanpriyadarshan/Training-a-Custom-TensorFlow-2.x-Object-Detector#exporting-the-inference-graph)
-8. [Testing out the Finished Model](https://github.com/armaanpriyadarshan/Training-a-Custom-TensorFlow-2.x-Object-Detector#testing-out-the-finished-model)
+1. [TensorFlow GPU kurulumu](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#installing-tensorflow-gpu)
+2. [Preparing our Workspace and Anaconda Virtual Environment Directory Structure](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#preparing-our-workspace-and-anaconda-virtual-environment-directory-structure)
+3. [Gathering and Labeling our Dataset](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#gathering-and-labeling-our-dataset)
+4. [Generating Training Data](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#generating-training-data)
+5. [Configuring the Training Pipeline](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#configuring-the-training-pipeline)
+6. [Training the Model](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#training-the-model)
+7. [Exporting the Inference Graph](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#exporting-the-inference-graph)
+8. [Testing out the Finished Model](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#testing-out-the-finished-model)
 
 In this repository, I have gathered and labelled my own dataset for my Pill Classification Demo that identifies two types of pills. The training data for this dataset has also been generated, and it's ready for training. If you want to try it out or get some practice with the Object Detection API, you can try training the Pill Classification Model.
 
