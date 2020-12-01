@@ -3,7 +3,7 @@
 
 
 ## içerik tablosu
-1. [TensorFlow GPU kurulumu](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#TensorFlow GPU kurulumu)
+1. [TensorFlow GPU kurulumu](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#TensorFlow-GPU-kurulumu)
 2. [Anaconda kurulumu ve ayarları](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#preparing-our-workspace-and-anaconda-virtual-environment-directory-structure)
 3. [Dataset hazırlama ve etiketleme](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#gathering-and-labeling-our-dataset)
 4. [Eğitim için gerekli ayarlamalar](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#generating-training-data)
