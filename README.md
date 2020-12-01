@@ -15,18 +15,20 @@
 Bu repoda kendi kedi ve kopek modelimi tanıyan bir model eğittim ve bu eğitimde etiketleme işlemlerini otomatik nasıl yaptığı size anlatmak istiyorum. 
 
 
-## System Requirements
+## Sistem gereksinimleri
 Bir tensorflow modeli eğitmek zorunda kaldığınızda sisteminiz bu eğitimi desteklemek zorundadır ve verimliliğini belirleyecektir. eğitilen model amd2700x işlemci  Nvidia 2060s ekran kartı ve 16Gb ram ile gerçekleşecektir. Windows üzerinde Tensorflow-GPU kütüphanesinin çalışması için Nvidia ekran kartı sahibi olmanız gerekmektedir. Eğer değilseniz Colab üzerinden googledrive'a dosyalarınızı yükleyerekte sanal bir Tesla-V100 sahibi gibi eğitim yapabilirsiniz. Dersimiz ilgi görürse ayrıca bununla ilgili bir ders yapılacak.
 sizde bu konu hakkında detalı bilgi için bu linke bakabilirsiniz.[tıkla](https://developer.nvidia.com/cuda-gpus).
 
 <p align="left">
   <img src="doc/cuda.png">
 </p>
-If you are unsure whether or not you have a compatible GPU, there are two options. The first is to use trial and error. By this I mean install the CUDA Runtime mentioned later on and see if your system is compatible. The CUDA Installer has a built-in system checker that determines your system compatibility. The second option is using Tensorflow CPU(basically just plain tensorflow), however this is significantly slower than TensorFlow-GPU but works just as well. I have not tested this, but if you decide to, follow the alternate steps I mention later on for TensorFlow CPU. You can also check if you have NVIDIA Drivers by opening Device Manager and checking your Display Adapters. If you have NVIDIA Drivers, you should be good.
+Uyumlu bir GPU'nuz olup olmadığından emin değilseniz, iki seçenek vardır. Birincisi deneme yanılma yapmaktır. CUDA Runtime'ı yükleyip ve sisteminizin uyumlu olup olmadığına bakabilirsiniz. CUDA Yükleyici, sistem uyumluluğunuzu belirleyen yerleşik bir sistem denetleyicisine sahiptir. İkinci seçenek ise Tensorflow CPU (temelde sadece düz tensorflow) kullanabilirsiniz, ancak bu TensorFlow-GPU'dan önemli ölçüde daha yavaştır ama aynı şekilde çalışır. Bunu denemedim, ancak buna karar verirseniz, daha sonra TensorFlow CPU için bahsettiğim alternatif adımları izleyin. Ayrıca, Aygıt Yöneticisi'ni açıp Ekran Bağdaştırıcılarınızı kontrol ederek NVIDIA Sürücüleriniz olup olmadığını da kontrol edebilirsiniz. NVIDIA Sürücüleriniz varsa, sorun yok demektir. yoksa ilk olarak güncel driverınızı yükleyin.
 
 ## Adımlar
 ### TensorFlow GPU kurulumu
-The first step is to install TensorFlow-GPU. There are lots of great videos on YouTube giving more detail on how to do this and I recommend taking a look at mine above for a better visualization of how to do so. The requirements for TensorFlow-GPU are Anaconda, CUDA, and cuDNN. The last two, CUDA and cuDNN, are needed to utilize the Graphics Memory of the GPU and shift the workload. Meanwhile, Anaconda is what we will use to configure a virtual environment where we will install the necessary packages.
+İlk adım olarak anaconda programının kurulu olduğunu varsayıyorum. eğer anaconda programı yoksa bunu nasıl yapacağınızı anlatan bir çok yt videosu mevcut bunlara bakabilirisiniz ben udemy dersimde anlatıyorum.
+
+TensorFlow-GPU kurulumu için gerçekten cok karmaşık yöntemler mevcut bunu size en basit yöntem ile kod yazmadan nasıl halledebilirsiniz bunu anlatmak istiyorum zira bu iş bu kadar kolayken bunu anlatan hiç bir kaynağa denk gelmedim. TensorFlow-GPU için gereksinimler Anaconda, CUDA ve cuDNN'dir bunların versiyonlarının ekran kartınızın versiyonuna  uyumlulu olması gerektiği gibi çeşitli path ayarları yapmak gerekmektedir. Ama anaconda bunu nasıl yapıyor
 
 First let's install Anaconda by going to the [Download Page](https://www.anaconda.com/products/individual). Here, download the 64-bit graphical installer and follow the steps to finish the installation. After this is done, you should have installed the Anaconda Navigator, which you should then open. Once here, open a command prompt.
 <p align="left">
@@ -35,7 +37,7 @@ First let's install Anaconda by going to the [Download Page](https://www.anacond
 Then create a virtual environment with this command
 
 ```
-conda create -n tensorflow pip python=3.8
+conda create -n tensorflow pip python=3.6
 ```
 
 Then activate the environment with
