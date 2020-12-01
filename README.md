@@ -3,7 +3,7 @@
 
 
 ## içerik tablosu
-1. [TensorFlow GPU kurulumu](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#installing-tensorflow-gpu)
+1. [TensorFlow GPU kurulumu](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#TensorFlow GPU kurulumu)
 2. [Anaconda kurulumu ve ayarları](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#preparing-our-workspace-and-anaconda-virtual-environment-directory-structure)
 3. [Dataset hazırlama ve etiketleme](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#gathering-and-labeling-our-dataset)
 4. [Eğitim için gerekli ayarlamalar](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#generating-training-data)
@@ -25,7 +25,7 @@ sizde bu konu hakkında detalı bilgi için bu linke bakabilirsiniz.[tıkla](htt
 If you are unsure whether or not you have a compatible GPU, there are two options. The first is to use trial and error. By this I mean install the CUDA Runtime mentioned later on and see if your system is compatible. The CUDA Installer has a built-in system checker that determines your system compatibility. The second option is using Tensorflow CPU(basically just plain tensorflow), however this is significantly slower than TensorFlow-GPU but works just as well. I have not tested this, but if you decide to, follow the alternate steps I mention later on for TensorFlow CPU. You can also check if you have NVIDIA Drivers by opening Device Manager and checking your Display Adapters. If you have NVIDIA Drivers, you should be good.
 
 ## The Steps
-### Installing TensorFlow GPU
+### TensorFlow GPU kurulumu
 The first step is to install TensorFlow-GPU. There are lots of great videos on YouTube giving more detail on how to do this and I recommend taking a look at mine above for a better visualization of how to do so. The requirements for TensorFlow-GPU are Anaconda, CUDA, and cuDNN. The last two, CUDA and cuDNN, are needed to utilize the Graphics Memory of the GPU and shift the workload. Meanwhile, Anaconda is what we will use to configure a virtual environment where we will install the necessary packages.
 
 First let's install Anaconda by going to the [Download Page](https://www.anaconda.com/products/individual). Here, download the 64-bit graphical installer and follow the steps to finish the installation. After this is done, you should have installed the Anaconda Navigator, which you should then open. Once here, open a command prompt.
