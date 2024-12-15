@@ -1,98 +1,97 @@
-# TensorFlow-2.X ile kendi nesne tanıma programını yaz 
-### TensorFlow-GPU ile kendi nesne tanıma programını nasıl eğitebilirsin bunu öğren ... 
+Elbette, GitHub README.md dosyasının geri kalan kısımlarını, yalnızca Türkçe bilen birinin anlayabileceği şekilde ve kodun yürütme sonrasında ürettiği çıktıları orijinal dilinde bırakarak Türkçeye çevirdim.
 
+# TensorFlow-2.X ile kendi nesne tanıma programını yaz
+### TensorFlow-GPU ile kendi nesne tanıma programını nasıl eğitebilirsin bunu öğren ...
 
-## içerik tablosu
-1. [TensorFlow GPU kurulumu](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#TensorFlow-GPU-kurulumu)
+## İçerik Tablosu
+1. [TensorFlow-GPU kurulumu](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#TensorFlow-GPU-kurulumu)
 2. [Anaconda kurulumu ve ayarları](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#Anaconda-kurulumu-ve-ayarları)
-3. [Dataset hazırlama ve etiketleme](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#gathering-and-labeling-our-dataset)
+3. [Veri kümesi toplama ve etiketleme](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#gathering-and-labeling-our-dataset)
 4. [Eğitim için gerekli ayarlamalar](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#generating-training-data)
 5. [Eğitim için klasör yapısı ve ayarları](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#configuring-the-training-pipeline)
 6. [Modelin eğitimi](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#training-the-model)
-7. [Inference Graph exportu](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#exporting-the-inference-graph)
+7. [Çıkarım grafiğinin (Inference Graph) dışa aktarımı](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#exporting-the-inference-graph)
 8. [Modelimizin testi](https://github.com/ufukasia/Training-a-Custom-TensorFlow-2.X-Object-Detector#testing-out-the-finished-model)
 
-Bu repoda kendi kedi ve kopek modelimi tanıyan bir model eğittim ve bu eğitimde etiketleme işlemlerini otomatik nasıl yaptığı size anlatmak istiyorum. 
+Bu repoda kendi kedi ve köpek modelimi tanıyan bir model eğittim ve bu eğitimde etiketleme işlemlerini otomatik olarak nasıl yaptığımı size anlatmak istiyorum.
 
-
-## Sistem gereksinimleri
-Bir tensorflow modeli eğitmek zorunda kaldığınızda sisteminiz bu eğitimi desteklemek zorundadır ve verimliliğini belirleyecektir. eğitilen model amd2700x işlemci  Nvidia 2060s ekran kartı ve 16Gb ram ile gerçekleşecektir. Windows üzerinde Tensorflow-GPU kütüphanesinin çalışması için Nvidia ekran kartı sahibi olmanız gerekmektedir. Eğer değilseniz Colab üzerinden googledrive'a dosyalarınızı yükleyerekte sanal bir Tesla-V100 sahibi gibi eğitim yapabilirsiniz. Dersimiz ilgi görürse ayrıca bununla ilgili bir ders yapılacak.
-sizde bu konu hakkında detalı bilgi için bu linke bakabilirsiniz.[tıkla](https://developer.nvidia.com/cuda-gpus).
+## Sistem Gereksinimleri
+Bir TensorFlow modeli eğitmek zorunda kaldığınızda sisteminiz bu eğitimi desteklemek zorundadır ve verimliliğini belirleyecektir. Eğitilen model AMD 2700X işlemci, Nvidia 2060s ekran kartı ve 16GB RAM ile gerçekleşecektir. Windows üzerinde TensorFlow-GPU kütüphanesinin çalışması için Nvidia ekran kartı sahibi olmanız gerekmektedir. Eğer değilseniz Colab üzerinden Google Drive'a dosyalarınızı yükleyerek de sanal bir Tesla-V100 sahibi gibi eğitim yapabilirsiniz. Dersimiz ilgi görürse ayrıca bununla ilgili bir ders yapılacak. Siz de bu konu hakkında detaylı bilgi için bu linke bakabilirsiniz. [tıkla](https://developer.nvidia.com/cuda-gpus).
 
 <p align="left">
   <img src="doc/cuda.png">
 </p>
-Uyumlu bir GPU'nuz olup olmadığından emin değilseniz, iki seçenek vardır. Birincisi deneme yanılma yapmaktır. CUDA Runtime'ı yükleyip ve sisteminizin uyumlu olup olmadığına bakabilirsiniz. CUDA Yükleyici, sistem uyumluluğunuzu belirleyen yerleşik bir sistem denetleyicisine sahiptir. İkinci seçenek ise Tensorflow CPU (temelde sadece düz tensorflow) kullanabilirsiniz, ancak bu TensorFlow-GPU'dan önemli ölçüde daha yavaştır ama aynı şekilde çalışır. Bunu denemedim, ancak buna karar verirseniz, daha sonra TensorFlow CPU için bahsettiğim alternatif adımları izleyin. Ayrıca, Aygıt Yöneticisi'ni açıp Ekran Bağdaştırıcılarınızı kontrol ederek NVIDIA Sürücüleriniz olup olmadığını da kontrol edebilirsiniz. NVIDIA Sürücüleriniz varsa, sorun yok demektir. yoksa ilk olarak güncel driverınızı yükleyin.
+Uyumlu bir GPU'nuz olup olmadığından emin değilseniz, iki seçenek vardır. Birincisi deneme yanılma yapmaktır. CUDA Runtime'ı yükleyip ve sisteminizin uyumlu olup olmadığına bakabilirsiniz. CUDA Yükleyici, sistem uyumluluğunuzu belirleyen yerleşik bir sistem denetleyicisine sahiptir. İkinci seçenek ise TensorFlow CPU (temelde sadece düz TensorFlow) kullanabilirsiniz, ancak bu TensorFlow-GPU'dan önemli ölçüde daha yavaştır ama aynı şekilde çalışır. Bunu denemedim, ancak buna karar verirseniz, daha sonra TensorFlow CPU için bahsettiğim alternatif adımları izleyin. Ayrıca, Aygıt Yöneticisi'ni açıp Ekran Bağdaştırıcılarınızı kontrol ederek NVIDIA Sürücüleriniz olup olmadığını da kontrol edebilirsiniz. NVIDIA Sürücüleriniz varsa, sorun yok demektir. Yoksa ilk olarak güncel driverınızı yükleyin.
 
 ## Adımlar
-### TensorFlow GPU kurulumu
-İlk adım olarak anaconda programının kurulu olduğunu varsayıyorum. eğer anaconda programı yoksa bunu nasıl yapacağınızı anlatan bir çok yt videosu mevcut bunlara bakabilirisiniz ben udemy dersimde anlatıyorum.
+### TensorFlow-GPU Kurulumu
+İlk adım olarak Anaconda programının kurulu olduğunu varsayıyorum. Eğer Anaconda programı yoksa bunu nasıl yapacağınızı anlatan birçok YouTube videosu mevcut, bunlara bakabilirsiniz. Ben Udemy dersimde anlatıyorum.
 
-TensorFlow-GPU kurulumu için gerçekten cok karmaşık yöntemler mevcut bunu size en basit yöntem ile kod yazmadan nasıl halledebilirsiniz bunu anlatmak istiyorum zira bu iş bu kadar kolayken bunu anlatan hiç bir kaynağa denk gelmedim. TensorFlow-GPU için gereksinimler Anaconda, CUDA ve cuDNN'dir bunların versiyonlarının ekran kartınızın versiyonuna  uyumlulu olması gerektiği gibi çeşitli path ayarları yapmak gerekmektedir. Ama anaconda bunu nasıl yapıyor
+TensorFlow-GPU kurulumu için gerçekten çok karmaşık yöntemler mevcut. Bunu size en basit yöntem ile kod yazmadan nasıl halledebilirsiniz bunu anlatmak istiyorum, zira bu iş bu kadar kolayken bunu anlatan hiçbir kaynağa denk gelmedim. TensorFlow-GPU için gereksinimler Anaconda, CUDA ve cuDNN'dir. Bunların versiyonlarının ekran kartınızın versiyonuna uyumlu olması gerektiği gibi çeşitli path ayarları yapmak gerekmektedir. Ama Anaconda bunu nasıl yapıyor?
 
-First let's install Anaconda by going to the [Download Page](https://www.anaconda.com/products/individual). Here, download the 64-bit graphical installer and follow the steps to finish the installation. After this is done, you should have installed the Anaconda Navigator, which you should then open. Once here, open a command prompt.
+Öncelikle [İndirme Sayfası](https://www.anaconda.com/products/individual)'na giderek Anaconda'yı kuralım. Buradan, 64-bit grafik yükleyiciyi indirin ve kurulumu tamamlamak için adımları izleyin. Bu tamamlandıktan sonra, Anaconda Navigator'ı yüklemiş olmalısınız, onu açın. Buraya geldikten sonra, bir komut istemi açın.
 <p align="left">
   <img src="doc/anaconda.png">
 </p>
-Then create a virtual environment with this command
+Ardından, bu komutla bir sanal ortam oluşturun:
 
 ```
 conda create -n tensorflow pip python=3.6
 ```
 
-Then activate the environment with
+Ardından, ortamı şu şekilde etkinleştirin:
 
 ```
 conda activate tensorflow
 ```
-**Note that whenever you open a new Anaconda Terminal you will not be in the virtual environment. So if you open a new prompt make sure to use the command above to activate the virtual environment**
+**Yeni bir Anaconda Terminali açtığınızda sanal ortamda olmayacağınızı unutmayın. Bu nedenle, yeni bir komut istemi açarsanız, sanal ortamı etkinleştirmek için yukarıdaki komutu kullandığınızdan emin olun**
 
-Now that our Anaconda Virtual Environment is set up, we can install CUDA and cuDNN. If you plan to use TensorFlow CPU, you can skip this step and go on to the TensorFlow Installation. If you are using a different version of TensorFlow, take a look at the tested building configurations [here](https://www.tensorflow.org/install/source#tested_build_configurations). For more information about installing TensorFlow GPU check the [TensorFlow website](https://www.tensorflow.org/install/gpu).
+Artık Anaconda Sanal Ortamımız kurulduğuna göre, CUDA ve cuDNN'yi kurabiliriz. TensorFlow CPU kullanmayı planlıyorsanız, bu adımı atlayabilir ve TensorFlow Kurulumuna geçebilirsiniz. Farklı bir TensorFlow sürümü kullanıyorsanız, test edilmiş yapılandırmalara [buradan](https://www.tensorflow.org/install/source#tested_build_configurations) göz atın. TensorFlow-GPU'yu kurma hakkında daha fazla bilgi için [TensorFlow web sitesine](https://www.tensorflow.org/install/gpu) bakın.
 
-Since you now know the correct CUDA and cuDNN versions needed for TensorFlow, we can install them from the NVIDIA Website. For TensorFlow 2.3.0, I used [cuDNN 7.6.5](https://developer.nvidia.com/compute/machine-learning/cudnn/secure/7.6.5.32/Production/10.1_20191031/cudnn-10.1-windows10-x64-v7.6.5.32.zip) and [CUDA 10.1](https://developer.nvidia.com/cuda-10.1-download-archive-base). Check the [CUDA Archive](https://developer.nvidia.com/cuda-toolkit-archive) and [cuDNN Archive](https://developer.nvidia.com/rdp/cudnn-archive) for other versions. After downloading both files, run the CUDA Installer and follow the setup wizard to install CUDA, there might be some MSBuild and Visual Studio conflicts which you should be able to resolve by installing the newest version of Visual Studio Community with MSBuild Tools. After you have successfully installed the CUDA Toolkit, find where it is installed (for me it was in C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.1). Then extract the contents of the cuDNN library in to the CUDA Folder.
+TensorFlow için gerekli olan doğru CUDA ve cuDNN sürümlerini artık bildiğinize göre, bunları NVIDIA Web Sitesinden yükleyebiliriz. TensorFlow 2.3.0 için [cuDNN 7.6.5](https://developer.nvidia.com/compute/machine-learning/cudnn/secure/7.6.5.32/Production/10.1_20191031/cudnn-10.1-windows10-x64-v7.6.5.32.zip) ve [CUDA 10.1](https://developer.nvidia.com/cuda-10.1-download-archive-base)'i kullandım. Diğer sürümler için [CUDA Arşivi](https://developer.nvidia.com/cuda-toolkit-archive) ve [cuDNN Arşivi](https://developer.nvidia.com/rdp/cudnn-archive)'ne bakın. Her iki dosyayı da indirdikten sonra, CUDA Yükleyiciyi çalıştırın ve CUDA'yı kurmak için kurulum sihirbazını izleyin, MSBuild ve Visual Studio ile ilgili bazı çakışmalar olabilir, bunları MSBuild Araçları ile Visual Studio Community'nin en yeni sürümünü yükleyerek çözebilirsiniz. CUDA Araç Kitini başarıyla yükledikten sonra, nereye kurulduğunu bulun (benim için C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.1 içindeydi). Ardından cuDNN kütüphanesinin içeriğini CUDA Klasörüne çıkarın.
 <p align="left">
   <img src="doc/cudnn.png">
 </p>
-Once done with this we have everything needed to install TensorFlow-GPU (or TensorFlow CPU). So we can navigate back to our anaconda prompt, and issue the following command
+Bunu tamamladıktan sonra, TensorFlow-GPU (veya TensorFlow CPU) kurmak için gereken her şeye sahibiz. Bu yüzden Anaconda komut istemimize geri dönebilir ve aşağıdaki komutu verebiliriz:
 
 ```
 pip install tensorflow-gpu
 ```
 
-If you are installing TensorFlow CPU, instead use
+TensorFlow CPU kuruyorsanız, bunun yerine şunu kullanın:
 
 ```
 pip install tensorflow
 ```
 
-Once we are done with the installation, we can use the following code to check if everything installed properly
+Kurulum tamamlandıktan sonra, her şeyin düzgün bir şekilde kurulup kurulmadığını kontrol etmek için aşağıdaki kodu kullanabiliriz:
 ```
 python
 >>> import tensorflow as tf
 >>> print(tf.__version__)
 ```
-If everything has installed properly you should get the message, "2.3.0", or whatever version of TensorFlow you have. This means TensorFlow is up and running and we are ready to setup our workspace. We can now proceed to the next step!
-**Note if there is an error with importing, you must install [Visual Studio 2019 with C++ Build Tools](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community&rel=16).**
+Her şey düzgün bir şekilde kurulduysa, "2.3.0" mesajını veya hangi TensorFlow sürümüne sahipseniz onu almalısınız. Bu, TensorFlow'un çalışır durumda olduğu ve çalışma alanımızı kurmaya hazır olduğumuz anlamına gelir. Şimdi bir sonraki adıma geçebiliriz!
+**İçe aktarmada bir hata varsa, [C++ Build Tools ile Visual Studio 2019](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community&rel=16)'u yüklemeniz gerekir.**
 
-### Anaconda kurulumu ve ayarları
-For the TensorFlow Object Detection API, there is a certain directory structure that we must follow to train our model. To make the process a bit easier, I added most of the necessary files in this repository.
+### Anaconda Kurulumu ve Ayarları
+TensorFlow Object Detection API için, modelimizi eğitmek için izlememiz gereken belirli bir dizin yapısı vardır. İşlemi biraz daha kolaylaştırmak için, gerekli dosyaların çoğunu bu repoya ekledim.
 
-Firstly, create a folder directly in C: and name it "TensorFlow". It's up to you where you want to put the folder, but you will have to keep in mind this directory path will be needed later to align with the commands. Once you have created this folder, go back to the Anaconda Prompt and switch to the folder with
+İlk olarak, doğrudan C:'de bir klasör oluşturun ve "TensorFlow" olarak adlandırın. Klasörü nereye koymak istediğiniz size kalmış, ancak bu dizin yolunun komutlarla uyumlu olması için daha sonra gerekli olacağını unutmayın. Bu klasörü oluşturduktan sonra, Anaconda Komut İstemine geri dönün ve şu komutla klasöre geçin:
 
 ```
 cd C:\TensorFlow
 ```
-Once you are here, you will have to clone the [TensorFlow models repository](https://github.com/tensorflow/models) with
+Buraya geldikten sonra, [TensorFlow models deposunu](https://github.com/tensorflow/models) şu komutla klonlamanız gerekecek:
 
 ```
 git clone https://github.com/tensorflow/models.git
 ```
-This should clone all the files in a directory called models. After you've done so, stay inside C:\TensorFlow and download [this](https://github.com/armaanpriyadarshan/Training-a-Custom-TensorFlow-2.X-Object-Detector/archive/master.zip) repository into a .zip file. Then extract the two files, workspace and scripts, highlighted below directly in to the TensorFlow directory.
+Bu, tüm dosyaları models adlı bir dizine klonlamalıdır. Bunu yaptıktan sonra, C:\TensorFlow içinde kalın ve [bu](https://github.com/armaanpriyadarshan/Training-a-Custom-TensorFlow-2.X-Object-Detector/archive/master.zip) repoyu bir .zip dosyası olarak indirin. Ardından, aşağıda vurgulanan iki dosyayı, workspace ve scripts'i doğrudan TensorFlow dizinine çıkarın.
 <p align="left">
   <img src="doc/clone.png">
 </p>
 
-Then, your directory structure should look something like this
+Ardından, dizin yapınız şöyle görünmelidir:
 
 ```
 TensorFlow/
@@ -105,52 +104,52 @@ TensorFlow/
 └─ workspace/
    ├─ training_demo/
 ```
-After we have setup the directory structure, we must install the prequisites for the Object Detection API. First we need to install the protobuf compiler with
+Dizin yapısını kurduktan sonra, Object Detection API için önkoşulları yüklemeliyiz. İlk önce protobuf derleyicisini şu komutla yüklememiz gerekiyor:
 
 ```
 conda install -c anaconda protobuf
 ```
-Then you should cd in to the TensorFlow\models\research directory with
+Ardından, şu komutla TensorFlow\models\research dizinine geçmelisiniz:
 
 ```
 cd models\research
 ```
-Then compile the protos with
+Ardından, protoları şu komutla derleyin:
 
 ```
 protoc object_detection\protos\*.proto --python_out=.
 ```
-After you have done this, close the terminal and open a new Anaconda prompt. If you are using the virtual environment we created earlier, then use the following command to activate it
+Bunu yaptıktan sonra, terminali kapatın ve yeni bir Anaconda komut istemi açın. Daha önce oluşturduğumuz sanal ortamı kullanıyorsanız, etkinleştirmek için aşağıdaki komutu kullanın:
 
 ```
 conda activate tensorflow
 ```
-With TensorFlow 2, pycocotools is a dependency for the Object Detection API. To install it with Windows Support use
+TensorFlow 2 ile pycocotools, Object Detection API için bir bağımlılıktır. Windows Desteği ile yüklemek için şunu kullanın:
 
 ```
 pip install cython
 pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=PythonAPI
 ```
-**Note that Visual C++ 2015 build tools must be installed and on your path, according to the installation instructions. If you do not have this package, then download it [here](https://go.microsoft.com/fwlink/?LinkId=691126).**
+**Kurulum talimatlarına göre Visual C++ 2015 derleme araçlarının kurulu ve yolunuzda olması gerektiğini unutmayın. Bu pakete sahip değilseniz, [buradan](https://go.microsoft.com/fwlink/?LinkId=691126) indirin.**
 
-Go back to the models\research directory with 
+Şu komutla models\research dizinine geri dönün:
 
 ```
 cd C:\TensorFlow\models\research
 ```
 
-Once here, copy and run the setup script with 
+Buraya geldikten sonra, kurulum betiğini kopyalayın ve çalıştırın:
 
 ```
 copy object_detection\packages\tf2\setup.py .
 python -m pip install .
 ```
-If there are any errors, report an issue, but they are most likely pycocotools issues meaning your installation was incorrect. But if everything went according to plan you can test your installation with
+Herhangi bir hata varsa, bir sorun bildirin, ancak bunlar büyük olasılıkla pycocotools sorunlarıdır, yani kurulumunuz yanlıştır. Ancak her şey plana göre gittiyse, kurulumunuzu şu komutla test edebilirsiniz:
 
 ```
 python object_detection\builders\model_builder_tf2_test.py
 ```
-You should get a similar output to this
+Şuna benzer bir çıktı almalısınız:
 
 ```
 [       OK ] ModelBuilderTF2Test.test_create_ssd_models_from_config
@@ -175,20 +174,19 @@ Ran 20 tests in 45.304s
 
 OK (skipped=1)
 ```
-This means we successfully set up the Anaconda Directory Structure and TensorFlow Object Detection API. We can now finally collect and label our dataset. So, let's go on to the next step!
+Bu, Anaconda Dizin Yapısını ve TensorFlow Object Detection API'yı başarıyla kurduğumuz anlamına gelir. Artık nihayet veri kümemizi toplayabilir ve etiketleyebiliriz. O halde bir sonraki adıma geçelim!
 
-### Gathering and Labeling our Dataset
-Since the TensorFlow Object Detection API ready to go, we must collect and label pictures that the model will be trained and tested on. All the files that will be needed from
-now on will be loacated in the workspace\training_demo directory. So take a second, look around, and get used to the structure of the directory. 
+### Veri Kümesi Toplama ve Etiketleme
+TensorFlow Object Detection API hazır olduğuna göre, modelin eğitileceği ve test edileceği resimleri toplamalı ve etiketlemeliyiz. Şu andan itibaren ihtiyaç duyulacak tüm dosyalar ```workspace\training_demo``` dizininde bulunacaktır. Bu yüzden bir saniye ayırın, etrafa bakın ve dizinin yapısına alışın.
 
-- ```annotations```: This is where we will store all our training data needed for our model. By this I mean the CSV and RECORD files needed for the training pipeline. There is also a PBTXT File with the labels for our model. If you are training your own dataset you can delete train.record and test.record, but if you are training my Pill Classifier model you can keep them.
-- ```exported-models```: This is our output folder where we will export and store our finished inference graph.
-- ```images```: This folder consists of a test and train folder. Here we will store the labelled images needed for training and testing as you can probably infer. The labelled images consist of the original image and an XML File. If you want to train the Pill Classifier model, you can keep the images and XML documents, otherwise delete the images and XML files.
-- ```models```: In this folder we will store our training pipeline and checkpoint information from the training job as well as the CONFIG file needed for training.
-- ```pre-trained-models```: Here we will store our pre-trained model that we will use as a starting checkpoint for training
-- The rest of the scripts are just used for training and exporting the model, as well as a sample object detection scipt that performs inference on a test image.
+- ```annotations```: Bu, modelimiz için gereken tüm eğitim verilerimizi saklayacağımız yerdir. Bununla, eğitim hattı için gereken CSV ve RECORD dosyalarını kastediyorum. Ayrıca modelimiz için etiketleri içeren bir PBTXT dosyası da var. Kendi veri kümenizi eğitiyorsanız train.record ve test.record dosyalarını silebilirsiniz, ancak benim Hap Sınıflandırıcı modelimi eğitiyorsanız bunları tutabilirsiniz.
+- ```exported-models```: Bu, bitmiş çıkarım grafiğimizi dışa aktarıp saklayacağımız çıktı klasörümüzdür.
+- ```images```: Bu klasör, bir test ve train klasöründen oluşur. Burada, muhtemelen tahmin edebileceğiniz gibi, eğitim ve test için gereken etiketli görüntüleri saklayacağız. Etiketli görüntüler, orijinal görüntü ve bir XML dosyasından oluşur. Hap Sınıflandırıcı modelini eğitmek istiyorsanız, görüntüleri ve XML belgelerini tutabilirsiniz, aksi takdirde görüntüleri ve XML dosyalarını silin.
+- ```models```: Bu klasörde, eğitim hattımızı ve eğitim işinden gelen kontrol noktası bilgilerini ve eğitim için gereken CONFIG dosyasını saklayacağız.
+- ```pre-trained-models```: Burada, eğitim için başlangıç kontrol noktası olarak kullanacağımız önceden eğitilmiş modelimizi saklayacağız.
+- Geri kalan betikler sadece modeli eğitmek ve dışa aktarmak için kullanılır, ayrıca bir test görüntüsü üzerinde çıkarım yapan örnek bir nesne algılama betiği de vardır.
 
-If you want to train a model on your own custom dataset, you must first gather images. Ideally you would want to use 100 images for each class. Say for example, you are training a cat and dog detector. You would have to gather 100 images of cats and 100 images of dogs. For images of pills, I just looked on the internet and downloaded various images. But for your own dataset, I recommend taking diverse pictures with different backgrounds and angles.
+Kendi özel veri kümeniz üzerinde bir model eğitmek istiyorsanız, önce resimler toplamalısınız. İdeal olarak, her sınıf için 100 resim kullanmak istersiniz. Örneğin, bir kedi ve köpek dedektörü eğitiyorsunuz diyelim. 100 kedi resmi ve 100 köpek resmi toplamanız gerekecek. Hap resimleri için, sadece internette arama yaptım ve çeşitli resimler indirdim. Ancak kendi veri kümeniz için, farklı arka planlara ve açılara sahip çeşitli resimler çekmenizi tavsiye ederim.
 <p align="left">
   <img src="doc/1c84d1d5-2318-5f9b-e054-00144ff88e88.jpg">
 </p>
@@ -199,21 +197,19 @@ If you want to train a model on your own custom dataset, you must first gather i
   <img src="doc/648_pd1738885_1.jpg">
 </p>
 
-After gathering some images, you must partition the dataset. By this I mean you must seperate the data in to a training set and testing set. You should put 80% of your images in to the images\training folder and put the remaining 20% in the images\test folder. After seperating your images, you can label them with [LabelImg](https://tzutalin.github.io/labelImg).
+Bazı resimler topladıktan sonra, veri kümesini bölümlere ayırmalısınız. Bununla, verileri bir eğitim kümesine ve bir test kümesine ayırmanız gerektiğini kastediyorum. Resimlerinizin %80'ini ```images\training``` klasörüne ve kalan %20'sini ```images\test``` klasörüne koymalısınız. Resimlerinizi ayırdıktan sonra, [LabelImg](https://tzutalin.github.io/labelImg) ile etiketleyebilirsiniz.
 
-
-After Downloading LablelImg, configure settings such as the Open Dir and Save Dir. This let's you cycle through all the images and create bounding boxes and labels around the objects. Once you have labelled your image make sure to save and go on to the next image. Do
-this for all the images in the images\test and images\train folders. 
+LabelImg'yi indirdikten sonra, Open Dir ve Save Dir gibi ayarları yapılandırın. Bu, tüm resimler arasında gezinmenize ve nesnelerin etrafında sınırlayıcı kutular ve etiketler oluşturmanıza olanak tanır. Resminizi etiketledikten sonra kaydettiğinizden ve bir sonraki resme geçtiğinizden emin olun. Bunu ```images\test``` ve ```images\train``` klasörlerindeki tüm resimler için yapın.
 
 <p align="left">
   <img src="doc/labelimg.png">
 </p>
 
-We have now gathered our dataset. This means we are ready to generate training data. So onwards to the next step!
+Artık veri kümemizi topladık. Bu, eğitim verilerini oluşturmaya hazır olduğumuz anlamına gelir. Öyleyse bir sonraki adıma geçelim!
 
-### Generating Training Data
+### Eğitim Verilerinin Oluşturulması
 
-Since our images and XML files are prepared, we are ready to create the label_map. It is located in the annotations folder, so navigate to that within File Explorer. After you've located label_map.pbtxt, open it with a Text Editor of your choice. If you plan to use my Pill Classification Model, you don't need to make any changes and you can skip to configuring the pipeline. If you want to make your own custom object detector you must create a similar item for each of your labels. Since my model had two classes of pills, my labelmap looked like 
+Görüntülerimiz ve XML dosyalarımız hazır olduğundan, label_map'i oluşturmaya hazırız. Annotations klasöründe bulunur, bu yüzden Dosya Gezgini içinde ona gidin. label_map.pbtxt'yi bulduktan sonra, istediğiniz bir Metin Düzenleyicisi ile açın. Benim Hap Sınıflandırma Modelimi kullanmayı planlıyorsanız, herhangi bir değişiklik yapmanıza gerek yoktur ve boru hattını yapılandırmaya atlayabilirsiniz. Kendi özel nesne dedektörünüzü yapmak istiyorsanız, etiketlerinizin her biri için benzer bir öğe oluşturmanız gerekir. Modelimde iki sınıf hap olduğu için, labelmap'im şuna benziyordu:
 ```
 item {
     id: 1
@@ -225,7 +221,7 @@ item {
     name: 'Ibuprofen 200 MG Oral Tablet'
 }
 ```
-For example, if you wanted to make a basketball, football, and baseball detector, your labelmap would look something like
+Örneğin, bir basketbol, futbol ve beyzbol dedektörü yapmak isteseydiniz, labelmap'iniz şuna benzerdi:
 ```
 item {
     id: 1
@@ -242,30 +238,30 @@ item {
     name: 'baseball'
 }
 ```
-Once you are done with this save as ```label_map.pbtxt``` and exit the text editor. Now we have to generate RECORD files for training. The script to do so is located in C:\TensorFlow\scripts\preprocessing, but we must first install the pandas package with
+Bunu tamamladıktan sonra ```label_map.pbtxt``` olarak kaydedin ve metin düzenleyiciden çıkın. Şimdi eğitim için RECORD dosyaları oluşturmalıyız. Bunu yapma betiği C:\TensorFlow\scripts\preprocessing dizininde bulunur, ancak önce şu komutla pandas paketini yüklemeliyiz:
 
 ```
 pip install pandas
 ```
-Now we should navigate to the scripts\preprocessing directory with
+Şimdi şu komutla scripts\preprocessing dizinine gitmeliyiz:
 
 ```
 cd C:\TensorFlow\scripts\preprocessing
 ```
 
-Once you are in the correct directory, run these two commands to generate the records
+Doğru dizine girdikten sonra, kayıtları oluşturmak için şu iki komutu çalıştırın:
 
 ```
 python generate_tfrecord.py -x C:\Tensorflow\workspace\training_demo\images\train -l C:\Tensorflow\workspace\training_demo\annotations\label_map.pbtxt -o C:\Tensorflow\workspace\training_demo\annotations\train.record
 
 python generate_tfrecord.py -x C:\Tensorflow\workspace\training_demo\images\test -l C:\Tensorflow\workspace\training_demo\annotations\label_map.pbtxt -o C:\Tensorflow\workspace\training_demo\annotations\test.record
 ```
- After each command you should get a success message stating that the TFRecord File has been created. So now under ```annotations``` there should be a ```test.record``` and ```train.record```. That means we have generated all the data necessary, and we can proceed to configure the training pipeline in the next step
+ Her komuttan sonra, TFRecord Dosyasının oluşturulduğunu belirten bir başarı mesajı almalısınız. Yani şimdi ```annotations``` altında bir ```test.record``` ve ```train.record``` olmalıdır. Bu, gerekli tüm verileri oluşturduğumuz anlamına gelir ve bir sonraki adımda eğitim hattını yapılandırmaya geçebiliriz.
 
-### Configuring the Training Pipeline
-For this tutorial, we will use a CONFIG File from one of the TensorFlow pre-trained models. There are plenty of models in the [TensorFlow Model Zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md), but we will use the [SSD MobileNet V2 FPNLite 640x640](http://download.tensorflow.org/models/object_detection/tf2/20200711/ssd_mobilenet_v2_fpnlite_640x640_coco17_tpu-8.tar.gz), as it is on the faster end of the spectrum with decent performance. If you want you can choose a different model, but you will have to alter the steps slightly.
+### Eğitim Hattının Yapılandırılması
+Bu eğitim için, TensorFlow önceden eğitilmiş modellerinden birinden bir CONFIG Dosyası kullanacağız. [TensorFlow Model Zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md)'da çok sayıda model var, ancak biz spektrumun daha hızlı ucunda ve iyi bir performansa sahip olan [SSD MobileNet V2 FPNLite 640x640](http://download.tensorflow.org/models/object_detection/tf2/20200711/ssd_mobilenet_v2_fpnlite_640x640_coco17_tpu-8.tar.gz)'ı kullanacağız. İsterseniz farklı bir model seçebilirsiniz, ancak adımları biraz değiştirmeniz gerekecek.
 
-To download the model you want, just click on the name in the TensorFlow Model Zoo. This should download a tar.gz file. Once it has downloaded, extracts the contents of the file to the ```pre-trained-models``` directory. The structure of that directory should now look something like this
+İstediğiniz modeli indirmek için TensorFlow Model Zoo'da adına tıklamanız yeterlidir. Bu, bir tar.gz dosyası indirmelidir. İndirildikten sonra, dosyanın içeriğini ```pre-trained-models``` dizinine çıkarın. Bu dizinin yapısı şimdi şöyle görünmelidir:
 
 ```
 training_demo/
@@ -277,7 +273,7 @@ training_demo/
 │     └─ pipeline.config
 └─ ...
 ```
-Now, we must create a directory to store our training pipeline. Navigate to the ```models``` directory and create a folder called ```my_ssd_mobilenet_v2_fpnlite```. Then copy the ```pipeline.config``` from the pre-trained-model we downloaded earlier to our newly created directory. Your directory should now look something like this
+Şimdi, eğitim hattımızı saklamak için bir dizin oluşturmalıyız. ```models``` dizinine gidin ve ```my_ssd_mobilenet_v2_fpnlite``` adlı bir klasör oluşturun. Ardından, daha önce indirdiğimiz önceden eğitilmiş modelden ```pipeline.config``` dosyasını yeni oluşturduğumuz dizine kopyalayın. Dizin yapınız şimdi şöyle görünmelidir:
 
 ```
 training_demo/
@@ -288,155 +284,156 @@ training_demo/
 └─ ...
 ```
 
-Then open up ```models\my_ssd_mobilenet_v2_fpnlite\pipeline.config``` in a text editor because we need to make some changes.
-- Line 3. Change ```num_classes``` to the number of classes your model detects. For the basketball, baseball, and football, example you would change it to ```num_classes: 3```
-- Line 135. Change ```batch_size``` according to available memory (Higher values require more memory and vice-versa). I changed it to:
+Ardından, ```models\my_ssd_mobilenet_v2_fpnlite\pipeline.config``` dosyasını bir metin düzenleyicide açın çünkü bazı değişiklikler yapmamız gerekiyor.
+- Satır 3. ```num_classes``` değerini modelinizin algıladığı sınıf sayısına değiştirin. Basketbol, beyzbol ve futbol örneği için ```num_classes: 3``` olarak değiştirirsiniz.
+- Satır 135. ```batch_size``` değerini kullanılabilir belleğe göre değiştirin (Daha yüksek değerler daha fazla bellek gerektirir ve tam tersi). Ben şu şekilde değiştirdim:
   - ```batch_size: 6```
-- Line 165. Change ```fine_tune_checkpoint``` to:
+- Satır 165. ```fine_tune_checkpoint``` değerini şu şekilde değiştirin:
   - ```fine_tune_checkpoint: "pre-trained-models/ssd_mobilenet_v2_fpnlite_640x640_coco17_tpu-8/checkpoint/ckpt-0"```
-- Line 171. Change ```fine_tune_checkpoint_type``` to:
+- Satır 171. ```fine_tune_checkpoint_type``` değerini şu şekilde değiştirin:
   - ```fine_tune_checkpoint_type: "detection"```
-- Line 175. Change ```label_map_path``` to:
+- Satır 175. ```label_map_path``` değerini şu şekilde değiştirin:
   - ```label_map_path: "annotations/label_map.pbtxt"```
-- Line 177. Change ```input_path``` to:
+- Satır 177. ```input_path``` değerini şu şekilde değiştirin:
   - ```input_path: "annotations/train.record"```
-- Line 185. Change ```label_map_path``` to:
+- Satır 185. ```label_map_path``` değerini şu şekilde değiştirin:
   - ```label_map_path: "annotations/label_map.pbtxt"```
-- Line 189. Change ```input_path``` to:
+- Satır 189. ```input_path``` değerini şu şekilde değiştirin:
   - ```input_path: "annotations/test.record"```
 
-Once we have made all the necessary changes, that means we are ready for training. So let's move on to the next step!
-### Training the Model
-Now you go back to your Anaconda Prompt. ```cd``` in to the ```training_demo``` with 
+Gerekli tüm değişiklikleri yaptıktan sonra, eğitime hazırız demektir. O halde bir sonraki adıma geçelim!
+### Modeli Eğitme
+Şimdi Anaconda Komut İsteminize geri dönün. Şu komutla ```training_demo``` dizinine geçin:
 
 ```
 cd C:\TensorFlow\workspace\training_demo
 ```
 
-I have already moved the training script in to the directory, so to run it just use 
+Eğitim betiğini zaten dizine taşıdım, bu yüzden çalıştırmak için şunu kullanmanız yeterlidir:
 
 ```
 python model_main_tf2.py --model_dir=models\my_ssd_mobilenet_v2_fpnlite --pipeline_config_path=models\my_ssd_mobilenet_v2_fpnlite\pipeline.config
 ```
 
-When running the script, you should expect a few warnings but as long as they're not errors you can ignore them. Eventually when the training process starts you should see output similar to this
+Betiği çalıştırırken, birkaç uyarı beklemeniz gerekir, ancak hata olmadıkları sürece bunları görmezden gelebilirsiniz. Sonunda eğitim süreci başladığında, şuna benzer bir çıktı görmelisiniz:
 
 ```
 INFO:tensorflow:Step 100 per-step time 0.640s loss=0.454
 I0810 11:56:12.520163 11172 model_lib_v2.py:644] Step 100 per-step time 0.640s loss=0.454
 ```
 
-Congratulations! You have officially started training your model! Now you can kick back and relax as this will take a few hours depending on your system. With my specs that I mentioned earlier, training took about 2 hours. TensorFlow logs output similar to the one above every 100 steps of the process so if it looks frozen, don't worry about it. This output shows you two statistics: per-step time and loss. You're going to want to pay attention to the loss. In between logs, the loss tends to decrease. Your ideally going to want to stop the program when it's between 0.150 and 0.200. This prevents underfitting and overfitting. For me it took around 4000 steps before the loss entered that range. And then to stop the program just use CTRL+C.
+Tebrikler! Modelinizi resmi olarak eğitmeye başladınız! Şimdi arkanıza yaslanıp rahatlayabilirsiniz çünkü bu, sisteminize bağlı olarak birkaç saat sürecektir. Daha önce bahsettiğim özelliklerimle, eğitim yaklaşık 2 saat sürdü. TensorFlow, sürecin her 100 adımında yukarıdakine benzer bir çıktı kaydeder, bu nedenle donmuş gibi görünüyorsa endişelenmeyin. Bu çıktı size iki istatistik gösterir: adım başına süre ve kayıp. Kayba dikkat etmek isteyeceksiniz. Kayıtlar arasında kayıp azalma eğilimindedir. İdeal olarak, programı 0.150 ile 0.200 arasındayken durdurmak isteyeceksiniz. Bu, yetersiz uydurmayı ve aşırı uydurmayı önler. Benim için, kaybın bu aralığa girmesi yaklaşık 4000 adım sürdü. Ve sonra programı durdurmak için CTRL+C kullanmanız yeterlidir.
 
-### Monitoring Training with TensorBoard (Optional)
+### TensorBoard ile Eğitimi İzleme (İsteğe Bağlı)
 
-TensorFlow allows you to monitor training and visualize training metrics with TensorBoard! Keep in mind this is completely optional and wont affect the training process, so it's up to you whether you want to do it. 
-First, open up a new Anaconda Prompt. Then activate the virtual environment we configured with
+TensorFlow, TensorBoard ile eğitimi izlemenize ve eğitim metriklerini görselleştirmenize olanak tanır! Bunun tamamen isteğe bağlı olduğunu ve eğitim sürecini etkilemeyeceğini unutmayın, bu nedenle yapmak isteyip istemediğiniz size kalmıştır.
+İlk olarak, yeni bir Anaconda Komut İstemi açın. Ardından, yapılandırdığımız sanal ortamı şu komutla etkinleştirin:
 
 ```
 conda activate tensorflow
 ```
 
-Then ```cd``` in to the ```training_demo``` directory with
+Ardından, şu komutla ```training_demo``` dizinine geçin:
 
 ```
 cd C:\TensorFlow\workspace\training_demo
 ```
-To start a TensorBoard Server, use 
- 
+Bir TensorBoard Sunucusu başlatmak için şunu kullanın:
+
 ```
 tensorboard --logdir=models\my_ssd_mobilenet_v2_fpnlite
 ```
-It should output something like this
- 
+Şuna benzer bir çıktı vermelidir:
+
 ```
 Serving TensorBoard on localhost; to expose to the network, use a proxy or pass --bind_all
 TensorBoard 2.2.2 at http://localhost:6006/ (Press CTRL+C to quit)
 ```
 
-Then just open up a web browser and paste the URL given in to the search bar. This should take you to the TensorBoard Server where you can continuously monitor training!
+Ardından, bir web tarayıcısı açın ve verilen URL'yi arama çubuğuna yapıştırın. Bu sizi, eğitimi sürekli olarak izleyebileceğiniz TensorBoard Sunucusuna götürmelidir!
 
-### Exporting the Inference Graph
+### Çıkarım Grafiğini Dışa Aktarma
 
-Once you have finished training and stopped the script, you are ready to export your finished model! You should still be in the ```training_demo``` directory but if not use
+Eğitimi bitirdikten ve betiği durdurduktan sonra, bitmiş modelinizi dışa aktarmaya hazırsınız demektir! Hala ```training_demo``` dizininde olmalısınız, ancak değilseniz şu komutla geçin:
 
 ```
 cd C:\TensorFlow\workspace\training_demo
 ```
 
-I have already moved the script needed to export, so all you need to do is run this command
+Dışa aktarmak için gereken betiği zaten taşıdım, bu yüzden tek yapmanız gereken şu komutu çalıştırmak:
 
 ```
 python .\exporter_main_v2.py --input_type image_tensor --pipeline_config_path .\models\my_ssd_mobilenet_v2_fpnlite\pipeline.config --trained_checkpoint_dir .\models\my_ssd_mobilenet_v2_fpnlite\ --output_directory .\exported-models\my_mobilenet_model
 ```
 
-**Note that if you get an error similar to ```TypeError: Expected Operation, Variable, or Tensor, got block4 in exporter_main_v2.py``` look at [this](https://github.com/tensorflow/models/issues/8881) error topic**
+**```TypeError: Expected Operation, Variable, or Tensor, got block4 in exporter_main_v2.py``` benzeri bir hata alırsanız, [bu](https://github.com/tensorflow/models/issues/8881) hata konusuna bakın**
 
-But if this program finishes successfully, then congratulations because your model is finished! It should be located in the ```C:\TensorFlow\workspace\training_demo\exported-models\my_mobilenet_model\saved_model``` folder. There should be an PB File called ```saved_model.pb```. This is the inference graph! I also prefer to copy the ```label_map.pbtxt``` file in to this directory because it makes things a bit easier for testing. If you forgot where the labelmap is located it should be in ```C:\TensorFlow\workspace\training_demo\annotations\label_map.pbtxt```. Since the labelmap and inference graph are organized, we are ready to test! 
+Ancak bu program başarıyla tamamlanırsa, tebrikler çünkü modeliniz bitti! ```C:\TensorFlow\workspace\training_demo\exported-models\my_mobilenet_model\saved_model``` klasöründe bulunmalıdır. ```saved_model.pb``` adlı bir PB Dosyası olmalıdır. Bu, çıkarım grafiğidir! Ayrıca ```label_map.pbtxt``` dosyasını bu dizine kopyalamayı tercih ediyorum çünkü test için işleri biraz daha kolaylaştırıyor. Labelmap'in nerede olduğunu unuttuysanız, ```C:\TensorFlow\workspace\training_demo\annotations\label_map.pbtxt``` içinde olmalıdır. Labelmap ve çıkarım grafiği düzenlendiğine göre, test etmeye hazırız!
 
-### Evaluating the Model (Optional)
+### Modeli Değerlendirme (İsteğe Bağlı)
 
-If you want to measure model metrics such as IoU, mAP, Recall, and Precision, you'll want to complete this step. The most up-to-date TensorFlow Documentation for evaluating the model will be located [here](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_training_and_evaluation.md#evaluation)
+IoU, mAP, Geri Çağırma ve Hassasiyet gibi model metriklerini ölçmek istiyorsanız, bu adımı tamamlamak isteyeceksiniz. Modeli değerlendirmek için en güncel TensorFlow Belgeleri [burada](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_training_and_evaluation.md#evaluation) bulunacaktır.
 
-You should still be in your ```TensorFlow/workspace/training_demo``` but if not cd into it with
+Hala ```TensorFlow/workspace/training_demo``` dizininde olmalısınız, ancak değilseniz şu komutla geçin:
 
 ```
 cd C:\TensorFlow\workspace\training_demo
 ```
 
-Now just run the following command to following command for evaluation
+Şimdi değerlendirme için aşağıdaki komutu çalıştırmanız yeterlidir:
 
 ```
 python model_main_tf2.py --pipeline_config_path models\my_ssd_mobilenet_v2_fpnlite\pipeline.config --model_dir models\my_ssd_mobilenet_v2_fpnlite --checkpoint_dir models\my_ssd_mobilenet_v2_fpnlite --alsologtostderr
 ```
 
-**Note that if you get an error similar to ```TypeError: object of type <class 'numpy.float64'> cannot be safely interpreted as an integer```, just downgrade your NumPy version. For me, version 1.17.3 worked so you can install it with ```pip install numpy==1.17.3```**
+**```TypeError: object of type <class 'numpy.float64'> cannot be safely interpreted as an integer``` benzeri bir hata alırsanız, NumPy sürümünüzü düşürmeniz yeterlidir. Benim için 1.17.3 sürümü çalıştı, bu yüzden ```pip install numpy==1.17.3``` ile yükleyebilirsiniz**
 
-If everything works properly, you should get something similar to this
+Her şey düzgün çalışıyorsa, şuna benzer bir şey almalısınız:
 
 <p align="center">
   <img src="doc/evaluation.png">
 </p>
 
-### Testing out the Finished Model
+### Bitmiş Modeli Test Etme
 
-To test out your model, you can use the sample object detection script I provided called ```TF-image-od.py```. This should be located in ```C:\TensorFlow\workspace\training_demo```. **Update**: I have added video support, argument support, and an extra OpenCV method. The description for each program shall be listed below 
-- ```TF-image-od.py```: This program uses the viz_utils module to visualize labels and bounding boxes. It performs object detection on a single image, and displays it with a cv2 window.
-- ```TF-image-object-counting.py```: This program also performs inference on a single image. I have added my own labelling method with OpenCV which I prefer. It also counts the number of detections and displays it in the top left corner. The final image is, again, displayed with a cv2 window.
-- ```TF-video-od.py```: This program is similar to the ```TF-image-od.py```. However, it performs inference on each individual frame of a video and displays it via cv2 window.
-- ```TF-video-object-counting.py```: This program is similar to ```TF-image-object-counting.py``` and has a similar labelling method with OpenCV. Takes a video for input, and also performs object detection on each frame, displaying the detection count in the top left corner.
+Modelinizi test etmek için, ```TF-image-od.py``` adlı sağladığım örnek nesne algılama betiğini kullanabilirsiniz. Bu, ```C:\TensorFlow\workspace\training_demo``` içinde bulunmalıdır. **Güncelleme**: Video desteği, argüman desteği ve fazladan bir OpenCV yöntemi ekledim. Her programın açıklaması aşağıda listelenecektir:
+- ```TF-image-od.py```: Bu program, etiketleri ve sınırlayıcı kutuları görselleştirmek için viz_utils modülünü kullanır. Tek bir görüntü üzerinde nesne algılama gerçekleştirir ve bunu bir cv2 penceresiyle görüntüler.
+- ```TF-image-object-counting.py```: Bu program ayrıca tek bir görüntü üzerinde çıkarım gerçekleştirir. Tercih ettiğim OpenCV ile kendi etiketleme yöntemimi ekledim. Ayrıca algılama sayısını sayar ve sol üst köşede görüntüler. Son görüntü, yine bir cv2 penceresiyle görüntülenir.
+- ```TF-video-od.py```: Bu program ```TF-image-od.py```'ye benzer. Ancak, bir videonun her bir karesi üzerinde çıkarım gerçekleştirir ve bunu cv2 penceresi aracılığıyla görüntüler.
+- ```TF-video-object-counting.py```: Bu program ```TF-image-object-counting.py```'ye benzer ve OpenCV ile benzer bir etiketleme yöntemine sahiptir. Girdi olarak bir video alır ve ayrıca her kare üzerinde nesne algılama gerçekleştirir ve algılama sayısını sol üst köşede görüntüler.
 
-The usage of each program looks like 
+Her programın kullanımı şöyle görünür:
 
 ```
 usage: TF-image-od.py [-h] [--model MODEL] [--labels LABELS] [--image IMAGE] [--threshold THRESHOLD]
 
 optional arguments:
   -h, --help            show this help message and exit
-  --model MODEL         Folder that the Saved Model is Located In
-  --labels LABELS       Where the Labelmap is Located
-  --image IMAGE         Name of the single image to perform detection on
-  --threshold THRESHOLD Minimum confidence threshold for displaying detected objects
+  --model MODEL         Kaydedilmiş Modelin Bulunduğu Klasör
+  --labels LABELS       Labelmap'in Bulunduğu Yer
+  --image IMAGE         Algılama gerçekleştirmek için tek bir görüntünün adı
+  --threshold THRESHOLD Algılanan nesneleri görüntülemek için minimum güven eşiği
 ```
-If the model or labelmap is located anywhere other than where I put them, you can specify the location with those arguments. You must also provide an image/video to perform inference on. If you are using my Pill Detection Model, this is unecessary as the default value should be fine. If you are using one of the video scripts, use ```--video``` instead of ```--image``` and provide the path to your test video. For example, the following steps run the sample ```TF-image-od.py``` script.
+Model veya labelmap, benim koyduğum yerlerden başka bir yerde bulunuyorsa, bu argümanlarla konumu belirtebilirsiniz. Ayrıca üzerinde çıkarım yapmak için bir görüntü/video sağlamalısınız. Benim Hap Algılama Modelimi kullanıyorsanız, varsayılan değer iyi olacağından bu gereksizdir. Video betiklerinden birini kullanıyorsanız, ```--image``` yerine ```--video``` kullanın ve test videonuzun yolunu sağlayın. Örneğin, aşağıdaki adımlar örnek ```TF-image-od.py``` betiğini çalıştırır.
 
 ```
 cd C:\TensorFlow\workspace\training_demo
 ```
 
-Then to run the script, just use
+Ardından betiği çalıştırmak için şunu kullanmanız yeterlidir:
 
 ```
 python TF-image-od.py
-``` 
+```
 
-**Note that if you get an error similar to ```
-cv2.error: OpenCV(4.3.0) C:\Users\appveyor\AppData\Local\Temp\1\pip-req-build-kv3taq41\opencv\modules\highgui\src\window.cpp:651: error: (-2:Unspecified error) The function is not implemented. Rebuild the library with Windows, GTK+ 2.x or Cocoa support. If you are on Ubuntu or Debian, install libgtk2.0-dev and pkg-config, then re-run cmake or configure script in function 'cvShowImage'
-``` just run ```pip install opencv-python``` and run the program again**
+**Şuna benzer bir hata alırsanız: ```
+cv2.error: OpenCV(4.3.0) C:\Users\appveyor\AppData\Local\Temp\1\pip-req-build-kv3taq41\opencv\modules\highgui\src\window.cpp:651: error: (-2:Belirtilmemiş hata) İşlev uygulanmadı. Kütüphaneyi Windows, GTK+ 2.x veya Cocoa desteğiyle yeniden oluşturun. Ubuntu veya Debian kullanıyorsanız, libgtk2.0-dev ve pkg-config'i kurun, ardından cmake veya yapılandırma betiğini 'cvShowImage' işlevinde yeniden çalıştırın
+``` bu durumda ```pip install opencv-python``` komutunu çalıştırın ve programı tekrar çalıştırın**
 
-If everything works properly you should get an output similar to this
+Her şey düzgün çalışıyorsa, şuna benzer bir çıktı almalısınız:
 <p align="center">
   <img src="doc/output.png">
 </p>
 
-This means we're done! Over the next few weeks or months, I'll keep working on new programs and keep testing! If you find something cool, feel free to share it, as others can also learn! And if you have any errors, just raise an issue and I'll be happy to take a look at it. Congratulations, and until next time, bye!
+Bu, işimizin bittiği anlamına gelir! Önümüzdeki birkaç hafta veya ay boyunca, yeni programlar üzerinde çalışmaya ve test etmeye devam edeceğim! Harika bir şey bulursanız, başkaları da öğrenebileceği için paylaşmaktan çekinmeyin! Herhangi bir hatanız varsa, bir sorun oluşturun, memnuniyetle incelerim. Tebrikler ve bir dahaki sefere kadar hoşça kalın!
+
